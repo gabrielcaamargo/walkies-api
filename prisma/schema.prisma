@@ -52,7 +52,8 @@ model Owner {
   createdAt           DateTime @default(now()) @map("created_at")
   updatedAt           DateTime @updatedAt @map("updated_at")
 
-  user User @relation(fields: [userId], references: [id])
+  user User  @relation(fields: [userId], references: [id])
+  dogs Dog[]
 
   @@map("owners")
 }
@@ -71,4 +72,33 @@ model Walker {
   user User @relation(fields: [userId], references: [id])
 
   @@map("walkers")
+}
+
+enum DogSize {
+  TINY
+  SMALL
+  MEDIUM
+  LARGE
+  GIANT
+  UNKNOWN
+}
+
+enum DogGender {
+  MALE
+  FEMALE
+}
+
+model Dog {
+  id        String    @id @default(uuid())
+  name      String
+  dogSize   DogSize   @default(UNKNOWN) @map("dog_size")
+  age       Int
+  gender    DogGender
+  ownerId   String    @map("owner_id")
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+
+  owner Owner @relation(fields: [ownerId], references: [id])
+
+  @@map("dogs")
 }
