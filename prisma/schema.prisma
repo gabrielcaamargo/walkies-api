@@ -13,3 +13,62 @@ generator client {
 datasource db {
   provider = "postgresql"
 }
+
+enum Role {
+  WALKER
+  OWNER
+}
+
+model User {
+  id           String   @id @default(uuid())
+  fullName     String   @map("full_name")
+  email        String   @unique
+  verifiedAt   DateTime @map("verified_at")
+  phone        String
+  password     String
+  rating       Float    @default(0.0)
+  role         Role
+  avatarUrl    String   @map("avatar_url")
+  totalReviews Int      @default(0) @map("total_reviews")
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+  owner        Owner?
+  walker       Walker?
+
+  @@map("users")
+}
+
+model Owner {
+  id                  String   @id @default(uuid())
+  userId              String   @unique @map("user_id")
+  defaultAddressLine1 String   @map("default_address_line_1")
+  defaultAddressLine2 String   @map("default_address_line_2")
+  defaultZipCode      String   @map("default_zip_code")
+  defaultCity         String   @map("default_city")
+  defaultState        String   @map("default_state")
+  defaultCountry      String   @map("default_country")
+  defaultLatitude     Float    @map("default_latitude")
+  defaultLongitude    Float    @map("default_longitude")
+  createdAt           DateTime @default(now()) @map("created_at")
+  updatedAt           DateTime @updatedAt @map("updated_at")
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@map("owners")
+}
+
+model Walker {
+  id                String   @id @default(uuid())
+  userId            String   @unique @map("user_id")
+  totalWalks        Int      @default(0) @map("total_walks")
+  serviceRadius     Float    @default(0.0) @map("service_radius")
+  basePricePerWalk  Float    @default(0.0) @map("base_price_per_walk")
+  isPriceNegotiable Boolean  @default(false) @map("is_price_negotiable")
+  balance           Float    @default(0.0)
+  updatedAt         DateTime @updatedAt @map("updated_at")
+  createdAt         DateTime @default(now()) @map("created_at")
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@map("walkers")
+}
