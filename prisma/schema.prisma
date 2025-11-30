@@ -72,6 +72,7 @@ model Walker {
 
   user     User      @relation(fields: [userId], references: [id])
   payments Payment[]
+  walks    Walk[]
 
   @@map("walkers")
 }
@@ -100,7 +101,8 @@ model Dog {
   createdAt DateTime  @default(now()) @map("created_at")
   updatedAt DateTime  @updatedAt @map("updated_at")
 
-  owner Owner @relation(fields: [ownerId], references: [id])
+  owner    Owner     @relation(fields: [ownerId], references: [id])
+  dogWalks DogWalk[]
 
   @@map("dogs")
 }
@@ -135,4 +137,45 @@ model Payment {
   recipient   Walker @relation(fields: [recipientId], references: [id])
 
   @@map("payments")
+}
+
+enum WalkStatus {
+  REQUESTED
+  ACCEPTED
+  WALK_STARTED
+  WALK_FINISHED
+  CANCELLED_BY_WALKER
+  CANCELLED_BY_OWNER
+}
+
+model Walk {
+  id          String     @id @default(uuid())
+  duration    Int        @default(0) @map("duration")
+  status      WalkStatus @default(REQUESTED)
+  startLat    Float      @map("start_lat")
+  startLong   Float      @map("start_long")
+  endLat      Float      @map("end_lat")
+  endLong     Float      @map("end_long")
+  createdAt   DateTime   @default(now()) @map("created_at")
+  updatedAt   DateTime   @updatedAt @map("updated_at")
+  cancelledAt DateTime?  @map("cancelled_at")
+
+  walkerId String    @map("walker_id")
+  walker   Walker    @relation(fields: [walkerId], references: [id])
+  dogWalks DogWalk[]
+
+  @@map("walks")
+}
+
+model DogWalk {
+  id String @id @default(uuid())
+
+  dogId     String   @map("dog_id")
+  dog       Dog      @relation(fields: [dogId], references: [id])
+  walkId    String   @map("walk_id")
+  walk      Walk     @relation(fields: [walkId], references: [id])
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@unique([dogId, walkId])
+  @@map("dog_walks")
 }
