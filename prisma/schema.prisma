@@ -52,8 +52,9 @@ model Owner {
   createdAt           DateTime @default(now()) @map("created_at")
   updatedAt           DateTime @updatedAt @map("updated_at")
 
-  user User  @relation(fields: [userId], references: [id])
-  dogs Dog[]
+  user     User      @relation(fields: [userId], references: [id])
+  dogs     Dog[]
+  payments Payment[]
 
   @@map("owners")
 }
@@ -69,7 +70,8 @@ model Walker {
   updatedAt         DateTime @updatedAt @map("updated_at")
   createdAt         DateTime @default(now()) @map("created_at")
 
-  user User @relation(fields: [userId], references: [id])
+  user     User      @relation(fields: [userId], references: [id])
+  payments Payment[]
 
   @@map("walkers")
 }
@@ -101,4 +103,36 @@ model Dog {
   owner Owner @relation(fields: [ownerId], references: [id])
 
   @@map("dogs")
+}
+
+enum PaymentMethod {
+  CREDIT_CARD
+  DEBIT_CARD
+  PIX
+  WALLET
+}
+
+enum PaymentStatus {
+  PENDING
+  FAILED
+  CONFIRMED
+  CANCELLED
+  REFUNDED
+}
+
+model Payment {
+  id            String        @id @default(uuid())
+  paymentMethod PaymentMethod @map("payment_method")
+  status        PaymentStatus
+  value         Float         @default(0.0)
+  createdAt     DateTime      @default(now()) @map("created_at")
+  updatedAt     DateTime      @updatedAt @map("updated_at")
+
+  payerId String @map("payer_id")
+  payer   Owner  @relation(fields: [payerId], references: [id])
+
+  recipientId String @map("recipient_id")
+  recipient   Walker @relation(fields: [recipientId], references: [id])
+
+  @@map("payments")
 }
