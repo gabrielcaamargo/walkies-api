@@ -28,7 +28,7 @@ model User {
   password     String
   rating       Float     @default(0.0)
   role         Role      @default(WALKER)
-  avatarUrl    String    @map("avatar_url")
+  avatarUrl    String?   @map("avatar_url")
   totalReviews Int       @default(0) @map("total_reviews")
   createdAt    DateTime  @default(now()) @map("created_at")
   updatedAt    DateTime  @updatedAt @map("updated_at")
