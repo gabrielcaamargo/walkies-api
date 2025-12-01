@@ -1,5 +1,6 @@
 import {AuthRepository, Role, User, SignupDto} from "@domain";
 import {PrismaService} from "../prisma.service";
+import {UserAdapter} from "../../adapters/user.adapter";
 
 export class AuthPrismaRepository implements AuthRepository {
 	constructor(private readonly prisma: PrismaService) {}
@@ -14,8 +15,10 @@ export class AuthPrismaRepository implements AuthRepository {
 			},
 		});
 
+		const adaptedUser = UserAdapter.prismaToUser(user);
 		// eslint-disable-next-line @typescript-eslint/no-unused-vars
-		const {password: _, ...userWithoutPassword} = user;
-		return userWithoutPassword as Omit<User, "password">;
+		const {password, ...userWithoutPassword} = adaptedUser;
+
+		return userWithoutPassword;
 	}
 }
