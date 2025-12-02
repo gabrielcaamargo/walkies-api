@@ -1,5 +1,5 @@
 import {AuthPrismaRepository, PrismaService} from "src/infra";
-import {SignUpUseCaseService} from "./use-cases/sign-up-use-case.service";
+import {SignUpWalkerUseCaseService} from "./use-cases/sign-up-walker-use-case.service";
 import {AuthRepository} from "./auth.repository";
 
 export const authProviders = [
@@ -8,5 +8,5 @@ export const authProviders = [
 		useClass: AuthPrismaRepository,
 	},
 	PrismaService,
-	SignUpUseCaseService,
+	SignUpWalkerUseCaseService,
 ];

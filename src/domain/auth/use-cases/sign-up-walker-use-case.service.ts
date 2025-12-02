@@ -7,10 +7,10 @@ import {Role} from "@domain";
 import {hash} from "bcrypt";
 
 @Injectable()
-export class SignUpUseCaseService implements UseCaseContract<SignupDto, SignupResponse> {
+export class SignUpWalkerUseCaseService implements UseCaseContract<SignupDto, SignupResponse> {
 	constructor(private readonly authRepository: AuthRepository) {}
 
-	async execute(input: SignupDto, role: Role): Promise<SignupResponse> {
+	async execute(input: SignupDto): Promise<SignupResponse> {
 		const userExists = await this.authRepository.findUserByEmail(input.email);
 
 		if (userExists) {
@@ -20,7 +20,7 @@ export class SignUpUseCaseService implements UseCaseContract<SignupDto, SignupRe
 		const SALT = 12;
 		const hashedPassword = await hash(input.password, SALT);
 
-		const user = await this.authRepository.signUp({...input, password: hashedPassword}, role);
+		const user = await this.authRepository.signUp({...input, password: hashedPassword}, Role.WALKER);
 
 		return user;
 	}

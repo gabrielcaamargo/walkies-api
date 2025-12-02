@@ -1,3 +1,3 @@
 export interface UseCaseContract<Input, Output> {
-	execute(input: Input, ...args: unknown[]): Promise<Output>;
+	execute(input: Input): Promise<Output>;
 }
