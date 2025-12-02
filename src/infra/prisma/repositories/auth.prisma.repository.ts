@@ -1,4 +1,4 @@
-import {AuthRepository, Role, SignupDto} from "@domain";
+import {AuthRepository, Role, SignupDto, User} from "@domain";
 import {PrismaService} from "../prisma.service";
 import {UserAdapter} from "../../adapters/user.adapter";
 import {SignupResponse} from "@shared";
@@ -21,5 +21,15 @@ export class AuthPrismaRepository implements AuthRepository {
 		const {password: _, ...userWithoutPassword} = adaptedUser;
 
 		return userWithoutPassword;
+	}
+
+	async findUserByEmail(email: string): Promise<User | null> {
+		const user = await this.prismaService.user.findUnique({
+			where: {
+				email: email.toLowerCase(),
+			},
+		});
+
+		return user ? UserAdapter.prismaToUser(user) : null;
 	}
 }
