@@ -1,5 +1,5 @@
 import {ConflictException, Injectable} from "@nestjs/common";
-import type {AuthRepository} from "../auth.repository";
+import {AuthRepository} from "../auth.repository";
 import {SignupResponse, UseCaseContract} from "@shared";
 import {SignupDto} from "../dto/signup.dto";
 import {Role} from "@domain";

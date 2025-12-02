@@ -2,7 +2,9 @@ import {AuthRepository, Role, SignupDto, User} from "@domain";
 import {PrismaService} from "../prisma.service";
 import {UserAdapter} from "../../adapters/user.adapter";
 import {SignupResponse} from "@shared";
+import {Injectable} from "@nestjs/common";
 
+@Injectable()
 export class AuthPrismaRepository implements AuthRepository {
 	constructor(private readonly prismaService: PrismaService) {}
 
@@ -29,7 +31,6 @@ export class AuthPrismaRepository implements AuthRepository {
 				email: email.toLowerCase(),
 			},
 		});
-
 		return user ? UserAdapter.prismaToUser(user) : null;
 	}
 }
