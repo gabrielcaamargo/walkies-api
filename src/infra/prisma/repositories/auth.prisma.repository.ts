@@ -16,8 +16,8 @@ export class AuthPrismaRepository implements AuthRepository {
 		});
 
 		const adaptedUser = UserAdapter.prismaToUser(user);
-		// eslint-disable-next-line @typescript-eslint/no-unused-vars
-		const {password, ...userWithoutPassword} = adaptedUser;
+
+		const {password: _, ...userWithoutPassword} = adaptedUser;
 
 		return userWithoutPassword;
 	}
