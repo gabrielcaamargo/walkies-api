@@ -4,6 +4,8 @@ import {SignupResponse, UseCaseContract} from "@shared";
 import {SignupDto} from "../dto/signup.dto";
 import {Role} from "@domain";
 
+import {hash} from "bcrypt";
+
 @Injectable()
 export class SignUpUseCaseService implements UseCaseContract<SignupDto, SignupResponse> {
 	constructor(private readonly authRepository: AuthRepository) {}
@@ -15,7 +17,10 @@ export class SignUpUseCaseService implements UseCaseContract<SignupDto, SignupRe
 			throw new ConflictException("User already exists");
 		}
 
-		const user = await this.authRepository.signUp(input, role);
+		const SALT = 12;
+		const hashedPassword = await hash(input.password, SALT);
+
+		const user = await this.authRepository.signUp({...input, password: hashedPassword}, role);
 
 		return user;
 	}
