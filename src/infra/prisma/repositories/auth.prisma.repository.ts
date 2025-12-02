@@ -1,12 +1,13 @@
-import {AuthRepository, Role, User, SignupDto} from "@domain";
+import {AuthRepository, Role, SignupDto} from "@domain";
 import {PrismaService} from "../prisma.service";
 import {UserAdapter} from "../../adapters/user.adapter";
+import {SignupResponse} from "@shared";
 
 export class AuthPrismaRepository implements AuthRepository {
-	constructor(private readonly prisma: PrismaService) {}
+	constructor(private readonly prismaService: PrismaService) {}
 
-	async signUp(data: SignupDto, role: Role): Promise<Omit<User, "password">> {
-		const user = await this.prisma.user.create({
+	async signUp(data: SignupDto, role: Role): Promise<SignupResponse> {
+		const user = await this.prismaService.user.create({
 			data: {
 				email: data.email,
 				fullName: data.fullName,
