@@ -1,5 +1,4 @@
 import {Injectable} from "@nestjs/common";
-import {AuthRepository} from "../auth.repository";
 import {SignupResponse, UseCaseContract} from "@shared";
 import {SignupDto} from "../dto/signup.dto";
 import {Role, Walker, WalkerRepository} from "@domain";
@@ -9,7 +8,6 @@ import {SignUpBaseService} from "./sign-up-base.service";
 @Injectable()
 export class SignUpWalkerUseCaseService implements UseCaseContract<SignupDto, Walker> {
 	constructor(
-		private readonly authRepository: AuthRepository,
 		private readonly walkerRepository: WalkerRepository,
 		private readonly signUpBaseService: SignUpBaseService,
 	) {}
