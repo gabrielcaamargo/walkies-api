@@ -1,14 +1,13 @@
 import {AuthRepository, Role, SignupDto, User} from "@domain";
 import {PrismaService} from "../prisma.service";
 import {UserAdapter} from "../../adapters/user.adapter";
-import {SignupResponse} from "@shared";
 import {Injectable} from "@nestjs/common";
 
 @Injectable()
 export class AuthPrismaRepository implements AuthRepository {
 	constructor(private readonly prismaService: PrismaService) {}
 
-	async signUp(data: SignupDto, role: Role): Promise<SignupResponse> {
+	async signUp(data: SignupDto, role: Role): Promise<Omit<User, "password">> {
 		const user = await this.prismaService.user.create({
 			data: {
 				email: data.email,
